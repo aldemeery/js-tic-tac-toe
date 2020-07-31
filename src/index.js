@@ -111,3 +111,20 @@ const Evaluator = (function () {
   return Evaluator;
 })();
 
+const Board = (function () {
+  function Board(dimension = 3) {
+    this.dimension = dimension;
+    this.board = new Array(dimension * dimension).fill(null);
+  }
+
+  Board.prototype.get = function (index) {
+    return this.board[index];
+  };
+
+  Board.prototype.put = function (item, index) {
+    this.board[index] = item;
+  };
+
+  return Board;
+})();
+
