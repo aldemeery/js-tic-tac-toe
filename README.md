@@ -1,44 +1,28 @@
-# Restaurant
+# JS Tic Tac Toe
 
-### A single page restaurant web app.
-
-**Note:** Only large screens (1190px to up).
+### Tic Tac Toe implemented in Vanilla JS
 
 ## Built With
 
-- Typescript
-- HTML5
-- CSS3
+-   Javascript
+-   HTML5
+-   CSS3
 
 ## Live Demo
 
-[Check it out here](https://aldemeery.github.io/restaurant/)
+[Check it out here](https://aldemeery.github.io/js-tic-tac-toe/)
 
 ## Getting Started
 
 In order to start this project, you will need:
 
 ```bash
-$ git clone https://github.com/aldemeery/restaurant.git
-$ cd restaurant
+$ git clone https://github.com/aldemeery/js-tic-tac-toe.git
+$ cd js-tic-tac-toe
 $ git checkout develop
 ```
 
-and then open `dist/index.html` in your browser.
-
-To build it from scratch
-
-```bash
-$ npm run build
-```
-
-### Pages
-
-##### You have three links in the navbar
-
-- **Home**.- To return to the home.
-- **Menu**.- The menu of the restaurant
-- **Contact**.- How to contact the restarant.
+and then open the `index.html` file in your browser.
 
 ## Deployed on GitHub Pages
 
@@ -48,8 +32,8 @@ Deployed on [GitHub Pages](https://pages.github.com/)
 
 👤 **Osama Aldemeery**
 
-- Github: [@aldemeery](https://github.com/aldemeery)
-- LinkedIn: [Osama Aldemeery](https://linkedin.com/in/osamaaldemeery)
+-   Github: [@aldemeery](https://github.com/aldemeery)
+-   LinkedIn: [Osama Aldemeery](https://linkedin.com/in/osamaaldemeery)
 
 ## 🤝 Contributing
 
