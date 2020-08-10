@@ -1,12 +1,13 @@
+/* eslint-disable no-plusplus */
 const Player = (function () {
-  function Player(name, symbol, { color = '#fff' }) {
+  function Player(name, symbol) {
     this.name = name;
     this.symbol = symbol;
-    this.color = color;
+    this.score = 0;
   }
 
   return Player;
-})();
+}());
 
 const Evaluator = (function () {
   function Evaluator(board, lastMove) {
@@ -15,7 +16,7 @@ const Evaluator = (function () {
   }
 
   Evaluator.prototype.isWinning = function () {
-    const dimension = this.board.dimension;
+    const { dimension } = this.board;
 
     const rowIndex = this.getRow();
     const columnIndex = this.getColumn();
@@ -44,6 +45,7 @@ const Evaluator = (function () {
 
     for (let i = 0; i < this.board.dimension - 1; i++) {
       index = this[direction](index);
+      // eslint-disable-next-line eqeqeq
       isWinning = isWinning && cell == this.board.get(index);
     }
 
@@ -71,13 +73,13 @@ const Evaluator = (function () {
   };
 
   Evaluator.prototype.getRow = function () {
-    const rowIndex = parseInt(this.lastMove / this.board.dimension);
+    const rowIndex = parseInt(this.lastMove / this.board.dimension, 10);
 
     return this.lastMove % this.board.dimension === 0 ? rowIndex - 1 : rowIndex;
   };
 
   Evaluator.prototype.getColumn = function () {
-    const columnIndex = parseInt(this.lastMove % this.board.dimension);
+    const columnIndex = parseInt(this.lastMove % this.board.dimension, 10);
     return this.lastMove % this.board.dimension === 0
       ? this.board.dimension - 1
       : columnIndex - 1;
@@ -103,18 +105,18 @@ const Evaluator = (function () {
     const rowIndex = this.getRow();
 
     return (
-      columnIndex === rowIndex ||
-      columnIndex + rowIndex + 1 === this.board.dimension
+      columnIndex === rowIndex
+      || columnIndex + rowIndex + 1 === this.board.dimension
     );
   };
 
   return Evaluator;
-})();
+}());
 
 const Board = (function () {
   function Board(dimension = 3) {
     this.dimension = dimension;
-    this.board = new Array(dimension * dimension).fill(null);
+    this.board = new Array(dimension * dimension).fill('');
   }
 
   Board.prototype.get = function (index) {
@@ -125,6 +127,128 @@ const Board = (function () {
     this.board[index] = item;
   };
 
-  return Board;
-})();
+  Board.prototype.isFilled = function () {
+    return this.board.filter(e => e).length === (this.dimension * this.dimension);
+  };
 
+  return Board;
+}());
+
+const Game = (function () {
+  function Game(board) {
+    this.board = board;
+    this.playerX = null;
+    this.playerO = null;
+    this.currentPlayer = null;
+    this.finished = false;
+  }
+
+  Game.prototype.render = function () {
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((el, i) => {
+      el.textContent = this.board.get(i);
+    });
+  };
+
+  function hideAnnouncement() {
+    const announcementNode = document.querySelector('#announcement');
+    announcementNode.style.display = 'none';
+  }
+
+  function displayWinner() {
+    const announcementNode = document.querySelector('#announcement');
+    announcementNode.style.display = 'block';
+    announcementNode.textContent = `${this.currentPlayer.name} wins!`;
+  }
+
+  function displayDraw() {
+    const announcementNode = document.querySelector('#announcement');
+    announcementNode.style.display = 'block';
+    announcementNode.textContent = 'Draw!';
+  }
+
+  Game.prototype.run = function () {
+    const game = this;
+    game.bootstrap();
+
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((el) => {
+      el.addEventListener('click', (e) => {
+        const index = e.target.dataset.index - 1;
+        if (!game.board.get(index) && !game.finished) {
+          game.board.put(game.currentPlayer.symbol, index);
+          game.render();
+          const winning = new Evaluator(game.board, index + 1).isWinning();
+          if (winning) {
+            game.currentPlayer.score += 1;
+            game.displayPlayerInfo();
+            displayWinner.bind(game)();
+            game.finished = true;
+          } else if (game.board.isFilled()) {
+            displayDraw();
+          } else {
+            game.switchPlayers();
+          }
+        }
+      });
+    });
+
+    const settingBtn = document.querySelector('#settings');
+    settingBtn.addEventListener('click', () => {
+      const modal = document.querySelector('#modal');
+      modal.style.display = 'block';
+    });
+
+    const resetBtn = document.querySelector('#reset');
+    resetBtn.addEventListener('click', () => {
+      game.currentPlayer = game.playerX;
+      game.board = new Board();
+      game.finished = false;
+      game.render();
+      hideAnnouncement();
+    });
+  };
+
+  Game.prototype.bootstrap = function () {
+    const game = this;
+    document.getElementById('confirm').addEventListener('click', () => {
+      const p1 = document.querySelector('#p1input');
+      const p2 = document.querySelector('#p2input');
+
+      const p1Name = p1.value || p1.placeholder;
+      const p2Name = p2.value || p2.placeholder;
+
+      document.querySelector('#modal').style.display = 'none';
+      [game.playerX, game.playerO] = [new Player(p1Name, 'X'), new Player(p2Name, 'O')];
+      game.currentPlayer = game.playerX;
+      game.board = new Board();
+      game.finished = false;
+      game.render();
+      hideAnnouncement();
+
+      game.displayPlayerInfo();
+    });
+  };
+
+  Game.prototype.displayPlayerInfo = function () {
+    const p1NameNode = document.querySelector('#p1');
+    const p2NameNode = document.querySelector('#p2');
+    const p1ScoreNode = document.querySelector('#p1score');
+    const p2ScoreNode = document.querySelector('#p2score');
+
+    p1NameNode.textContent = this.playerX.name;
+    p1ScoreNode.textContent = this.playerX.score;
+
+    p2NameNode.textContent = this.playerO.name;
+    p2ScoreNode.textContent = this.playerO.score;
+  };
+
+  Game.prototype.switchPlayers = function () {
+    this.currentPlayer = this.currentPlayer === this.playerX ? this.playerO : this.playerX;
+  };
+
+  return Game;
+}());
+
+const game = new Game(new Board());
+game.run();
