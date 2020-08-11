@@ -134,43 +134,38 @@ const Board = (function () {
   return Board;
 }());
 
-const Game = (function () {
-  function Game(board) {
-    this.board = board;
-    this.playerX = null;
-    this.playerO = null;
-    this.currentPlayer = null;
-    this.finished = false;
-  }
-
-  Game.prototype.render = function () {
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach((el, i) => {
-      el.textContent = this.board.get(i);
-    });
-  };
-
-  function hideAnnouncement() {
+const UI = (function () {
+  const hideAnnouncement = () => {
     const announcementNode = document.querySelector('#announcement');
     announcementNode.style.display = 'none';
-  }
+  };
 
-  function displayWinner() {
+  const displayWinner = (winner) => {
     const announcementNode = document.querySelector('#announcement');
     announcementNode.style.display = 'block';
-    announcementNode.textContent = `${this.currentPlayer.name} wins!`;
-  }
+    announcementNode.textContent = `${winner.name} wins!`;
+  };
 
-  function displayDraw() {
+  const displayDraw = () => {
     const announcementNode = document.querySelector('#announcement');
     announcementNode.style.display = 'block';
     announcementNode.textContent = 'Draw!';
-  }
+  };
 
-  Game.prototype.run = function () {
-    const game = this;
-    game.bootstrap();
+  const displayPlayerInfo = (playerX, playerO) => {
+    const p1NameNode = document.querySelector('#p1');
+    const p2NameNode = document.querySelector('#p2');
+    const p1ScoreNode = document.querySelector('#p1score');
+    const p2ScoreNode = document.querySelector('#p2score');
 
+    p1NameNode.textContent = playerX.name;
+    p1ScoreNode.textContent = playerX.score;
+
+    p2NameNode.textContent = playerO.name;
+    p2ScoreNode.textContent = playerO.score;
+  };
+
+  const registerEventListeners = (game) => {
     const cells = document.querySelectorAll('.cell');
     cells.forEach((el) => {
       el.addEventListener('click', (e) => {
@@ -181,11 +176,11 @@ const Game = (function () {
           const winning = new Evaluator(game.board, index + 1).isWinning();
           if (winning) {
             game.currentPlayer.score += 1;
-            game.displayPlayerInfo();
-            displayWinner.bind(game)();
+            UI.displayPlayerInfo(game.playerX, game.playerO);
+            UI.displayWinner(game.currentPlayer);
             game.finished = true;
           } else if (game.board.isFilled()) {
-            displayDraw();
+            UI.displayDraw();
           } else {
             game.switchPlayers();
           }
@@ -205,8 +200,40 @@ const Game = (function () {
       game.board = new Board();
       game.finished = false;
       game.render();
-      hideAnnouncement();
+      UI.hideAnnouncement();
     });
+  };
+
+  return {
+    hideAnnouncement,
+    displayWinner,
+    displayDraw,
+    registerEventListeners,
+    displayPlayerInfo,
+  };
+}());
+
+const Game = (function () {
+  function Game(board) {
+    this.board = board;
+    this.playerX = null;
+    this.playerO = null;
+    this.currentPlayer = null;
+    this.finished = false;
+  }
+
+  Game.prototype.render = function () {
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((el, i) => {
+      el.textContent = this.board.get(i);
+    });
+  };
+
+  Game.prototype.run = function () {
+    const game = this;
+    game.bootstrap();
+
+    UI.registerEventListeners(game);
   };
 
   Game.prototype.bootstrap = function () {
@@ -224,23 +251,10 @@ const Game = (function () {
       game.board = new Board();
       game.finished = false;
       game.render();
-      hideAnnouncement();
+      UI.hideAnnouncement();
 
-      game.displayPlayerInfo();
+      UI.displayPlayerInfo(game.playerX, game.playerO);
     });
-  };
-
-  Game.prototype.displayPlayerInfo = function () {
-    const p1NameNode = document.querySelector('#p1');
-    const p2NameNode = document.querySelector('#p2');
-    const p1ScoreNode = document.querySelector('#p1score');
-    const p2ScoreNode = document.querySelector('#p2score');
-
-    p1NameNode.textContent = this.playerX.name;
-    p1ScoreNode.textContent = this.playerX.score;
-
-    p2NameNode.textContent = this.playerO.name;
-    p2ScoreNode.textContent = this.playerO.score;
   };
 
   Game.prototype.switchPlayers = function () {
