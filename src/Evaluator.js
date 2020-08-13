@@ -35,7 +35,7 @@ class Evaluator {
     for (let i = 0; i < this.board.dimension - 1; i += 1) {
       index = this[direction](index);
       // eslint-disable-next-line eqeqeq
-      isWinning = isWinning && cell == this.board.get(index);
+      isWinning = isWinning && (cell == this.board.get(index) && cell !== '');
     }
 
     return isWinning;
