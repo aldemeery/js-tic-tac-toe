@@ -1,27 +1,31 @@
 import Board from '../src/Board';
 
-test('Board construction', () => {
-  const board = new Board();
-  expect(board.board).toStrictEqual(new Array(9).fill(''));
-  expect(board.dimension).toBe(3);
-});
+describe('Board', () => {
+  let board;
 
-test('Getting cells from board', () => {
-  const board = new Board();
-  expect(board.get(1)).toBe('');
-  board.board[1] = 'X';
-  expect(board.get(1)).toBe('X');
-});
+  beforeEach(() => {
+    board = new Board();
+  });
 
-test('Setting cells of board', () => {
-  const board = new Board();
-  board.put('X', 1);
-  expect(board.get(1)).toBe('X');
-});
+  test('Board construction', () => {
+    expect(board.board).toStrictEqual(new Array(9).fill(''));
+    expect(board.dimension).toBe(3);
+  });
 
-test('Checkinf if a board is filled', () => {
-  const board = new Board();
-  expect(board.isFilled()).toBe(false);
-  board.board = new Array(9).fill('X');
-  expect(board.isFilled()).toBe(true);
+  test('Getting cells from board', () => {
+    expect(board.get(1)).toBe('');
+    board.board[1] = 'X';
+    expect(board.get(1)).toBe('X');
+  });
+
+  test('Setting cells of board', () => {
+    board.put('X', 1);
+    expect(board.get(1)).toBe('X');
+  });
+
+  test('Checking if a board is filled', () => {
+    expect(board.isFilled()).toBe(false);
+    board.board = new Array(9).fill('X');
+    expect(board.isFilled()).toBe(true);
+  });
 });
