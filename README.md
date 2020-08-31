@@ -20,9 +20,21 @@ In order to start this project, you will need:
 $ git clone https://github.com/aldemeery/js-tic-tac-toe.git
 $ cd js-tic-tac-toe
 $ git checkout develop
+$ npm run dev
 ```
 
-and then open the `index.html` file in your browser.
+and then open `localhost:8000` in your browser.
+
+## Testing
+
+This application is tested using [Jest](https://jestjs.io/).
+All the tests are under the `tests/` folder.
+
+To run the tests:
+
+```bash
+$ npm run test
+```
 
 ## Deployed on GitHub Pages
 
