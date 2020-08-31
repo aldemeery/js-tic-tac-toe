@@ -1,13 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tic-Tac-Toe</title>
-        <link rel="stylesheet" href="./style.css" />
-    </head>
-    <body>
-        <div id="root"></div>
-        <script src="./index.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <main>
+        <h1>Tic Tac Toe</h1>
+        <div id="container">
+            <h3 id="scoreboard">
+                <span id="p1"></span> <span id="p1score"></span> vs <span id="p2score"></span> <span id="p2"></span>
+            </h3>
+            <h2 style="display: none;" id="announcement"></h2>
+            <div id="gameboard">
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+                <div class="cell" data-index="9"></div>
+            </div>
+            <div>
+                <button class="btn settings" id="settings">New Game</button>
+                <button class="btn reset" id="reset">Restart</button>
+            </div>
+            <div id="modal">
+                <div id="modal-content">
+                    <div class="players">
+                        <div>
+                            <label for="">First Player (X):</label>
+                            <input type="text" id="p1input" placeholder="John">
+                        </div>
+                        <div>
+                            <label for="">Second Player (O):</label>
+                            <input type="text" id="p2input" placeholder="Jane">
+                        </div>
+                    </div>
+                    <button class="btn" id="confirm">OK</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="index.js"></script>
+</body>
 </html>
